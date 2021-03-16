@@ -92,25 +92,25 @@ def resend(file):
     content = f.read()
     data = ''
     req = get_request_from_file(content)
-    if content.find('HTTPS') != -1:
-        data = make_https_request(get_host_from_file(content), req)
+    if content.find('Host:') != -1:
+        data = make_https_request(get_host_from_file_https(content), req)
     else:
         print("Request\n\n" + req + "Response\n\n")
-        data = make_http_request(get_host_from_file(content), req)
+        data = make_http_request(get_host_from_file_http(content), req)
     print(data)
 
 
 def insert_symbols_by_one_and_send(content: str, indexes: list, symbol: str):
-    if content.find('HTTPS') != -1:
-        standard = make_https_request(get_host_from_file(content), content)
+    if content.find('Host:') != -1:
+        standard = make_https_request(get_host_from_file_https(content), content)
     else:
-        standard = make_http_request(get_host_from_file(content), content)
+        standard = make_http_request(get_host_from_file_http(content), content)
     for i in indexes:
         data = content[:i] + symbol + content[i:]
-        if content.find('HTTPS') != -1:
-            resp = make_https_request(get_host_from_file(data), data)
+        if content.find('Host:') != -1:
+            resp = make_https_request(get_host_from_file_https(data), data)
         else:
-            resp = make_http_request(get_host_from_file(data), data)
+            resp = make_http_request(get_host_from_file_http(data), data)
         if len(standard) != len(resp):
             print("SQL injection found: " + data)
 
@@ -128,10 +128,19 @@ def find_sql_injection(file: str):
     insert_symbols_by_one_and_send(content, index, "\"")
 
 
-def get_host_from_file(content: str):
+def get_host_from_file_http(content: str):
     pos = content.find('//') + 2
     host = ''
     while content[pos] != '/':
+        host += content[pos]
+        pos += 1
+    return host
+
+
+def get_host_from_file_https(content: str):
+    pos = content.find('Host: ') + 6
+    host = ''
+    while content[pos] != '\n':
         host += content[pos]
         pos += 1
     return host
