@@ -102,17 +102,16 @@ def resend(file):
 
 def insert_symbols_by_one_and_send(content: str, indexes: list, symbol: str):
     if content.find('HTTPS') != -1:
-        standart = make_https_request(get_host_from_file(content), content)
+        standard = make_https_request(get_host_from_file(content), content)
     else:
-        standart = make_http_request(get_host_from_file(content), content)
-    print(standart)
+        standard = make_http_request(get_host_from_file(content), content)
     for i in indexes:
         data = content[:i] + symbol + content[i:]
         if content.find('HTTPS') != -1:
             resp = make_https_request(get_host_from_file(data), data)
         else:
             resp = make_http_request(get_host_from_file(data), data)
-        if len(standart) != len(resp):
+        if len(standard) != len(resp):
             print("SQL injection found: " + data)
 
 
