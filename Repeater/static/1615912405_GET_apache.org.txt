@@ -1,0 +1,8 @@
+------------------REQUEST----------------------
+<{[GET http://apache.org/?name1=value1&name2=value2 HTTP/1.1
+Accept: */*
+Proxy-Connection: Keep-Alive
+User-Agent: curl/7.64.1
+
+]}>
+------------------RESPONSE----------------------
